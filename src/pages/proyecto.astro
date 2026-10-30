@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/paths';
+---
+
+<Base
+  title="Proyecto — Membrillo"
+  description="Qué es Membrillo: un proyecto de contenido audiovisual sobre cine, música y lo que viene."
+>
+  <section class="mx-auto w-full max-w-3xl px-5 pb-20 pt-8 sm:px-8">
+    <p class="text-[10px] uppercase tracking-[0.35em] text-quince">Proyecto</p>
+    <h1
+      class="mt-3 font-display text-4xl font-semibold leading-tight tracking-tight text-cream sm:text-5xl"
+    >
+      Membrillo es una forma de mirar y escuchar
+    </h1>
+
+    <div class="prose-membrillo mt-8 text-sm sm:text-base">
+      <p>
+        Empezamos con dos podcasts: Cine Manija, conversaciones largas sobre
+        películas; y Micro Lado C, episodios breves sobre música. Con el tiempo
+        se suman noticias, agenda y otros formatos que todavía estamos
+        imaginando.
+      </p>
+      <p>
+        Nos interesa el contenido audiovisual como excusa para conversar: sin
+        snobismo, sin rankings definitivos y con ganas de compartir lo que nos
+        mueve.
+      </p>
+      <h2>Cómo trabajamos</h2>
+      <p>
+        Cada episodio nace de una obsesión personal. Lo investigamos, lo
+        discutimos y lo grabamos cuando la conversación ya tiene forma. Después
+        viene la parte menos glamorosa: editar, escuchar de nuevo y cortar lo que
+        sobra.
+      </p>
+      <h2>Qué viene</h2>
+      <p>
+        Nuevas secciones, funciones en vivo y proyectos audiovisuales de formato
+        largo. Si querés sumarte o proponer algo, escribinos.
+      </p>
+    </div>
+
+    <a
+      href={withBase('/contacto')}
+      class="mt-10 inline-block border border-quince/60 px-5 py-3 text-[11px] uppercase tracking-[0.18em] text-quince transition-colors hover:bg-quince hover:text-ink"
+      >Hablemos</a
+    >
+  </section>
+</Base>

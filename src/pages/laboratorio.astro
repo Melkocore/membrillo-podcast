@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import LabControls from '../components/LabControls';
+import { AUDIO_MARKER, VISUAL_MARKER } from '../lib/ambientPreset';
+
+const labCode = `${VISUAL_MARKER}
+await initHydra({ feedStrudel: true })
+osc(9, 0.05, 1.1)
+  .color(1, 0.55, 0.2)
+  .rotate(0.07, 0.015)
+  .modulate(noise(2.5, 0.08), 0.12)
+  .blend(osc(4, 0.02, 0.7).color(0.65, 0.16, 0.1), 0.45)
+  .posterize(8)
+  .out()
+
+${AUDIO_MARKER}
+setcps(0.42)
+stack(
+  note("<[g3,a#3,d4] [f3,a3,c4] [d#3,g3,a#3] [d3,f3,a3]>")
+    .s("sine")
+    .attack(1.5)
+    .release(3)
+    .gain(0.22)
+    .room(0.85),
+  note("<g5 a#5 f5 d5>")
+    .s("triangle")
+    .attack(0.8)
+    .release(2.5)
+    .gain(0.06)
+    .delay(0.45)
+    .room(0.9)
+    .slow(2),
+  note("<g2 d2 f2 d2>")
+    .s("sine")
+    .attack(2)
+    .release(4)
+    .gain(0.12)
+    .room(0.6)
+)`;
+---
+
+<Base
+  title="Laboratorio — Membrillo"
+  description="Live coding con Strudel y Hydra: editá el código, escuchá y cambiá el fondo."
+>
+  <section class="mx-auto w-full max-w-6xl px-5 pb-20 pt-8 sm:px-8">
+    <p class="text-[10px] uppercase tracking-[0.35em] text-quince">
+      Laboratorio
+    </p>
+    <h1
+      class="mt-3 font-display text-4xl font-semibold leading-tight tracking-tight text-cream sm:text-5xl"
+    >
+      Live coding
+    </h1>
+    <p class="mt-4 max-w-2xl text-sm leading-relaxed text-cream-dim sm:text-base">
+      Hydra para la imagen y Strudel para el sonido. El REPL reproduce la última
+      expresión que evalúas, así que el bloque de audio va al final. Editá el
+      código y usá <span class="text-cream">Reproducir</span> o
+      <span class="text-cream">Ctrl + Enter</span>.
+    </p>
+
+    <LabControls client:load />
+
+    <div
+      class="mt-4 max-w-2xl border border-ink-line bg-ink-soft/60 p-4 text-[11px] leading-relaxed tracking-wide text-cream-dim/80"
+    >
+      El ambiente del sitio se pausa al entrar al laboratorio. Hydra crea un
+      canvas fijo que cubre la página: es parte del experimento. Recargá para
+      volver al fondo normal. Los bloques
+      <span class="text-quince">VISUAL</span> y
+      <span class="text-quince">AUDIO</span> se separan con sus marcadores;
+      <span class="text-cream">Usar como ambiente</span> guarda ambos para que
+      el sitio use tu versión. En el sitio el fondo corre por separado del
+      audio, así que la audio-reactividad del lab no se conserva.
+    </div>
+
+    <div class="mt-8 overflow-hidden border border-ink-line">
+      <strudel-editor code={labCode}></strudel-editor>
+    </div>
+  </section>
+
+  <script is:inline src="https://unpkg.com/@strudel/repl@1.3.0"></script>
+  <style is:global>
+    strudel-editor {
+      display: none;
+    }
+
+    strudel-editor + div {
+      width: 100%;
+    }
+  </style>
+</Base>

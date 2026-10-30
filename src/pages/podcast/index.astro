@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { withBase } from '../../lib/paths';
+
+const shows = (
+  await getCollection('shows', ({ data }) => !data.draft)
+).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base
+  title="Podcast — Membrillo"
+  description="Los podcasts de Membrillo: Cine Manija y Micro Lado C."
+>
+  <section class="mx-auto w-full max-w-6xl px-5 pb-20 pt-8 sm:px-8">
+    <p class="text-[10px] uppercase tracking-[0.35em] text-quince">Podcast</p>
+    <h1
+      class="mt-3 max-w-2xl font-display text-4xl font-semibold leading-tight tracking-tight text-cream sm:text-5xl"
+    >
+      Conversaciones que valen la pena
+    </h1>
+    <p class="mt-4 max-w-xl text-sm leading-relaxed text-cream-dim sm:text-base">
+      Dos formats, una misma idea: hablar de lo que nos gusta sin apuro.
+    </p>
+
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
+      {
+        shows.map((show) => (
+          <a
+            href={withBase(`/podcast/${show.id}`)}
+            class="group relative flex flex-col justify-between overflow-hidden border border-ink-line bg-ink-soft/60 p-6 transition-colors hover:border-quince/50 sm:p-8"
+          >
+            <span
+              class="absolute inset-x-0 top-0 h-px"
+              style={`background:${show.data.accent}`}
+            />
+            <div>
+              <p
+                class="text-[10px] uppercase tracking-[0.25em]"
+                style={`color:${show.data.accent}`}
+              >
+                {show.data.tagline}
+              </p>
+              <h2 class="mt-3 font-display text-3xl font-semibold tracking-tight text-cream transition-colors group-hover:text-quince">
+                {show.data.title}
+              </h2>
+              <p class="mt-3 text-sm leading-relaxed text-cream-dim">
+                {show.data.description}
+              </p>
+            </div>
+            <div class="mt-8 flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-cream-dim/60">
+              <span>{show.data.hosts.join(' · ')}</span>
+              <span class="text-quince" aria-hidden="true">Escuchar →</span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Base>

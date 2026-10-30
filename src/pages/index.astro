@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import RadialMenu from '../components/RadialMenu';
+import EpisodeCard from '../components/EpisodeCard.astro';
+import { withBase } from '../lib/paths';
+
+const shows = await getCollection('shows', ({ data }) => !data.draft);
+const showById = new Map(shows.map((show) => [show.id, show.data]));
+
+const latestEpisodes = (
+  await getCollection('episodes', ({ data }) => !data.draft)
+)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const latestNews = (
+  await getCollection('news', ({ data }) => !data.draft)
+)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 2);
+
+const newsDate = new Intl.DateTimeFormat('es', {
+  day: 'numeric',
+  month: 'long',
+});
+---
+
+<Base>
+  <section
+    class="mx-auto flex w-full max-w-6xl flex-col items-center px-5 pb-14 pt-4 sm:px-8"
+  >
+    <div class="max-w-2xl text-center">
+      <p class="text-[10px] uppercase tracking-[0.35em] text-quince">
+        Podcast · Cine · Música
+      </p>
+      <h1
+        class="mt-4 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-cream sm:text-5xl"
+      >
+        Un árbol de historias
+      </h1>
+      <p class="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-cream-dim sm:text-base">
+        Elegí una rama y recorré lo que estamos haciendo. Cada nodo es una
+        puerta: podcasts, noticias, agenda y todo lo que viene.
+      </p>
+    </div>
+
+    <div class="mt-8 w-full">
+      <RadialMenu client:load />
+    </div>
+  </section>
+
+  <section
+    class="mx-auto w-full max-w-6xl px-5 pb-16 sm:px-8"
+    aria-labelledby="al-aire"
+  >
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <p class="text-[10px] uppercase tracking-[0.3em] text-cream-dim/60">
+          Lo último
+        </p>
+        <h2
+          id="al-aire"
+          class="mt-2 font-display text-2xl font-semibold tracking-tight text-cream"
+        >
+          Al aire
+        </h2>
+      </div>
+      <a
+        href={withBase('/podcast')}
+        class="text-[11px] uppercase tracking-[0.18em] text-quince transition-opacity hover:opacity-70"
+        >Ver todo →</a
+      >
+    </div>
+
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      {
+        latestEpisodes.map((episode) => (
+          <EpisodeCard
+            episode={episode}
+            showTitle={showById.get(episode.data.show)?.title ?? episode.data.show}
+            accent={showById.get(episode.data.show)?.accent}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <section
+    class="mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8"
+    aria-labelledby="ultimas-noticias"
+  >
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <p class="text-[10px] uppercase tracking-[0.3em] text-cream-dim/60">
+          Bitácora
+        </p>
+        <h2
+          id="ultimas-noticias"
+          class="mt-2 font-display text-2xl font-semibold tracking-tight text-cream"
+        >
+          Últimas noticias
+        </h2>
+      </div>
+      <a
+        href={withBase('/noticias')}
+        class="text-[11px] uppercase tracking-[0.18em] text-quince transition-opacity hover:opacity-70"
+        >Ver todas →</a
+      >
+    </div>
+
+    <div class="mt-6 grid gap-4 md:grid-cols-2">
+      {
+        latestNews.map((entry) => (
+          <a
+            href={withBase(`/noticias/${entry.id}`)}
+            class="group border border-ink-line bg-ink-soft/60 p-6 transition-colors hover:border-quince/50"
+          >
+            <time
+              datetime={entry.data.pubDate.toISOString()}
+              class="text-[10px] uppercase tracking-[0.2em] text-cream-dim/60"
+            >
+              {newsDate.format(entry.data.pubDate)}
+            </time>
+            <h3 class="mt-3 font-display text-xl leading-snug text-cream transition-colors group-hover:text-quince">
+              {entry.data.title}
+            </h3>
+            <p class="mt-2 text-sm leading-relaxed text-cream-dim">
+              {entry.data.summary}
+            </p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Base>

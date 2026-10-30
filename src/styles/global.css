@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0c0908;
+  --color-ink-soft: #151010;
+  --color-ink-line: #2a211e;
+  --color-cream: #f3e8d7;
+  --color-cream-dim: #c9b8a4;
+  --color-quince: #f0a63c;
+  --color-guinda: #a83b2c;
+
+  --font-sans: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    background-image:
+      radial-gradient(1100px 750px at 72% -10%, rgba(240, 166, 60, 0.08), transparent 62%),
+      radial-gradient(900px 700px at 8% 112%, rgba(168, 59, 44, 0.14), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background-color: var(--color-quince);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-quince);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  .prose-membrillo {
+    color: var(--color-cream-dim);
+    line-height: 1.75;
+  }
+
+  .prose-membrillo h2 {
+    color: var(--color-cream);
+    font-size: 1.4rem;
+    margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .prose-membrillo p {
+    margin-bottom: 1rem;
+  }
+
+  .prose-membrillo a {
+    color: var(--color-quince);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose-membrillo ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@keyframes halo {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(1.14);
+  }
+}
+
+.radial-halo {
+  animation: halo 6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes float-node {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .radial-halo,
+  .float-node {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

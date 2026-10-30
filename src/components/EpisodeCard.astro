@@ -1,0 +1,45 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  episode: CollectionEntry<'episodes'>;
+  showTitle: string;
+  accent?: string;
+}
+
+const { episode, showTitle, accent = '#f0a63c' } = Astro.props;
+const date = new Intl.DateTimeFormat('es', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+}).format(episode.data.pubDate);
+---
+
+<a
+  href={withBase(`/podcast/${episode.data.show}/${episode.id}`)}
+  class="group flex flex-col justify-between gap-5 border border-ink-line bg-ink-soft/60 p-5 transition-colors hover:border-quince/50"
+>
+  <div>
+    <div
+      class="flex items-center justify-between gap-3 text-[10px] uppercase tracking-[0.2em] text-cream-dim/70"
+    >
+      <span style={`color:${accent}`}>{showTitle}</span>
+      <span>{date}</span>
+    </div>
+    <h3
+      class="mt-3 font-display text-lg leading-snug text-cream transition-colors group-hover:text-quince"
+    >
+      {episode.data.title}
+    </h3>
+    <p class="mt-2 line-clamp-2 text-sm text-cream-dim">
+      {episode.data.description}
+    </p>
+  </div>
+  <div
+    class="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-cream-dim/60"
+  >
+    <span>{episode.data.duration ?? 'Podcast'}</span>
+    <span class="text-quince" aria-hidden="true">Escuchar →</span>
+  </div>
+</a>
